@@ -9,18 +9,9 @@
 import UIKit
 
 class FirstViewController: UITableViewController {
-
-    @IBOutlet weak var statsButton: UIBarButtonItem!
     
     var tasks = [Task]()
-    
-    func isWithin24Hours(date: NSDate) -> Bool {
-        let yesterday = NSDate(timeIntervalSinceNow: -3600*24)
-        return yesterday.earlierDate(date) == yesterday
-    }
-    
-    
-    
+    var numberOfCompletedTasks = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +30,7 @@ class FirstViewController: UITableViewController {
     
     // Keep cells updated (including with their checkmarks)
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        deleteOver24HrTasks()
         let cell: UITableViewCell = UITableViewCell(style: UITableViewCellStyle.Subtitle , reuseIdentifier: "Default")
         cell.textLabel!.text = tasks[indexPath.row].name
         if tasks[indexPath.row].finished == false {
@@ -47,7 +39,6 @@ class FirstViewController: UITableViewController {
         else if tasks[indexPath.row].finished == true {
             cell.accessoryType = UITableViewCellAccessoryType.Checkmark
         }
-        //cell.detailTextLabel!.text = "Test Text"
         return cell
     }
     
@@ -57,12 +48,13 @@ class FirstViewController: UITableViewController {
         if tasks[indexPath.row].finished == false {
             cell.accessoryType = UITableViewCellAccessoryType.Checkmark
             tasks[indexPath.row].finished = true
+            numberOfCompletedTasks += 1
         } else {
             cell.accessoryType = UITableViewCellAccessoryType.None
             tasks[indexPath.row].finished = false
+            numberOfCompletedTasks -= 1
         }
-        tasks[indexPath.row].date = NSDate()
-        
+        tasks[indexPath.row].date = NSDate().timeIntervalSince1970
         
     }
     
@@ -70,6 +62,7 @@ class FirstViewController: UITableViewController {
         return true
     }
     
+    // Function to delete tasks
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
             tasks.removeAtIndex(indexPath.row)
@@ -77,14 +70,34 @@ class FirstViewController: UITableViewController {
         }
     }
     
-    // Receive info from SecondViewController and add to table
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "Stats" {
+            let statsView: StatsViewController = segue.destinationViewController as! StatsViewController
+            statsView.counter = numberOfCompletedTasks
+        }
+    }
     
+    // Receive info from SecondViewController and add to table
     @IBAction func unwindToTableViewController(segue:UIStoryboardSegue) {
         if segue.identifier == "Save" {
             let sourceView: SecondViewController = segue.sourceViewController as! SecondViewController
             let newTask: Task = sourceView.task
             tasks.append(newTask)
             self.tableView.reloadData()
+        }
+    }
+    
+    
+    // Function to delete tasks that have been checked off for more than 24 hours
+    func deleteOver24HrTasks() {
+        let currTime = NSDate().timeIntervalSince1970
+        let oneDay = Double(60*60*24)
+        for i in 0 ..< tasks.count {
+            if tasks[i].finished {
+                if (currTime - tasks[i].date) >= oneDay {
+                    tasks.removeAtIndex(i)
+                }
+            }
         }
     }
     

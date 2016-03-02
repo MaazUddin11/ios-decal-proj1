@@ -29,8 +29,7 @@ class SecondViewController: UIViewController {
     
     // Adds task to the array of tasks and resers the text boxes and moves
     // us to the First View
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
-    {
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if sender === self.saveButton {
             self.task = Task(name: taskName.text!)
         }

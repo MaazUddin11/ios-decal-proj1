@@ -12,12 +12,12 @@ class Task: NSObject {
 
     var name = ""
     var finished = false
-    var date = NSDate()
+    var date = NSDate().timeIntervalSince1970
     
     init(name: String) {
         self.name = name
         self.finished = false
-        self.date = NSDate()
+        self.date = NSDate().timeIntervalSince1970
     }
     
 }

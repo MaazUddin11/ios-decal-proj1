@@ -74,7 +74,7 @@
                     <navigationItem key="navigationItem" title="Tasks" id="O67-mb-yne">
                         <barButtonItem key="leftBarButtonItem" title="Stats" id="fJR-7D-AGl">
                             <connections>
-                                <segue destination="4pz-Rr-WpE" kind="push" id="t7G-5S-nMA"/>
+                                <segue destination="4pz-Rr-WpE" kind="push" identifier="Stats" id="t7G-5S-nMA"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="K3j-fM-p6t">
@@ -83,9 +83,6 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
-                    <connections>
-                        <outlet property="statsButton" destination="fJR-7D-AGl" id="pUz-qX-wyz"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QGR-mj-lm1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
